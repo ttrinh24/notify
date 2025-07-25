@@ -23,7 +23,7 @@ type Telegram struct {
 	chatIDs []int64
 }
 
-// New returns a new instance of a Telegram notification service.
+// New returns a new instance of a Telegram notification service using the default Telegram API endpoint.
 // For more information about telegram api token:
 //
 //	-> https://pkg.go.dev/github.com/go-telegram-bot-api/telegram-bot-api#NewBotAPI
@@ -39,6 +39,19 @@ func New(apiToken string) (*Telegram, error) {
 	}
 
 	return t, nil
+}
+
+// NewTelegramService returns a new instance of a Telegram service using a custom API endpoint.
+func NewTelegramService(apiToken, baseURL string) (*Telegram, error) {
+	client, err := tgbotapi.NewBotAPIWithAPIEndpoint(apiToken, baseURL)
+	if err != nil {
+		return nil, err
+	}
+
+	return &Telegram{
+		client:  client,
+		chatIDs: []int64{},
+	}, nil
 }
 
 // SetClient set a new custom BotAPI instance.
